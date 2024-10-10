@@ -37,6 +37,8 @@ jobs:
     deploy:
         needs: build
         runs-on: ubuntu-latest
+        environment:
+            name: github-pages # Add environment for GitHub Pages
         permissions:
             pages: write # Allow deployment to GitHub Pages
             id-token: write # Necessary for deployment
