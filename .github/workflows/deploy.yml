@@ -1,0 +1,48 @@
+name: Deploy App to GitHub Pages
+
+on:
+    push:
+        branches:
+            - main # Deploy only when pushing to the main branch
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            # Step 1: Checkout the repository
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            # Step 2: Set up Node.js
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "20"
+
+            # Step 3: Install dependencies
+            - name: Install dependencies
+              run: npm install
+
+            # Step 4: Build the app
+            - name: Build the app
+              run: npm run build
+
+            # Step 5: Upload artifact (build output)
+            - name: Upload artifact for deployment
+              uses: actions/upload-pages-artifact@v2
+              with:
+                  path: ./dist # Path to the folder with the built site (e.g., 'dist')
+
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages # Add environment for GitHub Pages
+        permissions:
+            pages: write # Allow deployment to GitHub Pages
+            id-token: write # Necessary for deployment
+        steps:
+            # Step 6: Deploy to GitHub Pages
+            - name: Deploy to GitHub Pages
+              uses: actions/deploy-pages@v2
