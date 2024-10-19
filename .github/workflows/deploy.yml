@@ -12,13 +12,11 @@ jobs:
         steps:
             # Step 1: Checkout the repository
             - name: Checkout repository
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             # Step 2: Set up Node.js
             - name: Set up Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: "20"
+              uses: actions/setup-node@v4
 
             # Step 3: Install dependencies
             - name: Install dependencies
@@ -30,9 +28,9 @@ jobs:
 
             # Step 5: Upload artifact (build output)
             - name: Upload artifact for deployment
-              uses: actions/upload-pages-artifact@v2
+              uses: actions/upload-pages-artifact@v3
               with:
-                  path: ./dist # Path to the folder with the built site (e.g., 'dist')
+                  path: ./dist # Path to the folder with the built site
 
     deploy:
         needs: build
@@ -45,4 +43,4 @@ jobs:
         steps:
             # Step 6: Deploy to GitHub Pages
             - name: Deploy to GitHub Pages
-              uses: actions/deploy-pages@v2
+              uses: actions/deploy-pages@v4
