@@ -1,14 +1,11 @@
 import {
-    Alert,
-    AlertDescription,
-    AlertIcon,
     Button,
     Center,
-    CircularProgress,
     FormControl,
     FormLabel,
     Heading,
     Input,
+    useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +14,7 @@ const LoginForm = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const [error, setError] = useState("");
+    const loginStatusToast = useToast();
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -43,16 +40,31 @@ const LoginForm = () => {
             if (response.ok) {
                 onLoginSuccess();
             } else {
-                setError(data.message);
+                loginStatusToast({
+                    title: "Error logging in",
+                    description: data.message,
+                    status: "error",
+                    isClosable: true,
+                });
             }
         } catch (error: any) {
-            setError("Error sending request");
+            loginStatusToast({
+                title: "Error logging in",
+                description: error.message,
+                status: "error",
+                isClosable: true,
+            });
         } finally {
             setLoading(false);
         }
     };
 
     const onLoginSuccess = () => {
+        loginStatusToast({
+            title: "Login successful",
+            status: "success",
+            isClosable: true,
+        });
         navigate("/fritata-frontend/");
     };
 
@@ -80,26 +92,17 @@ const LoginForm = () => {
                     />
                 </FormControl>
                 <Center mt={4}>
-                    <Button variant="outline" width={"full"} type="submit">
-                        {loading ? (
-                            <CircularProgress
-                                isIndeterminate
-                                size="24px"
-                                color="teal"
-                            />
-                        ) : (
-                            "Login"
-                        )}
+                    <Button
+                        isLoading={loading}
+                        loadingText="Logging in..."
+                        variant="outline"
+                        width={"full"}
+                        type="submit"
+                    >
+                        Login
                     </Button>
                 </Center>
             </form>
-
-            {error && (
-                <Alert status="error" borderRadius={4} mt={6}>
-                    <AlertIcon />
-                    <AlertDescription>{error}</AlertDescription>
-                </Alert>
-            )}
         </>
     );
 };

@@ -1,10 +1,6 @@
 import {
-    Alert,
-    AlertDescription,
-    AlertIcon,
     Button,
     Center,
-    CircularProgress,
     FormControl,
     FormLabel,
     Heading,
@@ -18,9 +14,9 @@ const RegisterForm = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const registerSuccessToast = useToast();
-    const [error, setError] = useState("");
+    const registerStatusToast = useToast();
     const [loading, setLoading] = useState(false);
+    const [loadingText, setLoadingText] = useState("Registering...");
     const navigate = useNavigate();
 
     const handleSumbit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -44,22 +40,33 @@ const RegisterForm = () => {
             if (response.ok) {
                 await onRegisterSuccess();
             } else {
-                setError(data.message);
+                registerStatusToast({
+                    title: "Error registering",
+                    description: data.message,
+                    status: "error",
+                    isClosable: true,
+                });
             }
         } catch (error: any) {
-            setError("Error sending request");
+            registerStatusToast({
+                title: "Error registering",
+                description: error.message,
+                status: "error",
+                isClosable: true,
+            });
         } finally {
             setLoading(false);
         }
     };
 
     const onRegisterSuccess = async () => {
-        registerSuccessToast({
+        registerStatusToast({
             title: "Account created",
             description: "Logging in...",
             status: "success",
             isClosable: true,
         });
+        setLoadingText("Logging in...");
 
         try {
             const response = await fetch(
@@ -80,14 +87,29 @@ const RegisterForm = () => {
             if (response.ok) {
                 onLoginSuccess();
             } else {
-                setError(data.message);
+                registerStatusToast({
+                    title: "Error logging in",
+                    description: data.message,
+                    status: "error",
+                    isClosable: true,
+                });
             }
         } catch (error: any) {
-            setError("Error sending request");
+            registerStatusToast({
+                title: "Error logging in",
+                description: error.message,
+                status: "error",
+                isClosable: true,
+            });
         }
     };
 
     const onLoginSuccess = () => {
+        registerStatusToast({
+            title: "Login successful",
+            status: "success",
+            isClosable: true,
+        });
         navigate("/fritata-frontend/");
     };
 
@@ -115,26 +137,17 @@ const RegisterForm = () => {
                     />
                 </FormControl>
                 <Center mt={4}>
-                    <Button variant="outline" width={"full"} type="submit">
-                        {loading ? (
-                            <CircularProgress
-                                isIndeterminate
-                                size="24px"
-                                color="teal"
-                            />
-                        ) : (
-                            "Register"
-                        )}
+                    <Button
+                        isLoading={loading}
+                        loadingText={loadingText}
+                        variant="outline"
+                        width={"full"}
+                        type="submit"
+                    >
+                        Register
                     </Button>
                 </Center>
             </form>
-
-            {error && (
-                <Alert status="error" borderRadius={4} mt={6}>
-                    <AlertIcon />
-                    <AlertDescription>{error}</AlertDescription>
-                </Alert>
-            )}
         </>
     );
 };
