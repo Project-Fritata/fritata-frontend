@@ -1,4 +1,5 @@
-import { PostsGetResponse } from "@/internal/ReqRes";
+import { GetPosts } from "@/internal/api/PostsApi";
+import { PostsGetResponse } from "@/internal/Models";
 import {
     Avatar,
     Card,
@@ -6,44 +7,46 @@ import {
     Heading,
     Image,
     Text,
+    useToast,
     VStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 const PostFeed = () => {
     const [offset, setOffset] = useState(0);
-    const [limit, setLimit] = useState(10);
+    const limit = 10;
     const [posts, setPosts] = useState<PostsGetResponse[]>([]);
 
+    const getPostsStatus = useToast();
     const getPosts = async () => {
-        const response = await fetch(
-            "http://localhost:8020/api/v1/posts?offset=" +
-                offset +
-                "&limit=" +
-                limit
-        );
-        const data: any[] = await response.json();
-        if (!response.ok || data == null || data.length === 0) {
-            return;
+        const response = await GetPosts(offset, limit);
+        if (response.success && response.data) {
+            const newPosts: PostsGetResponse[] = response.data.map((post) => {
+                return {
+                    post: {
+                        id: post.post.id,
+                        content: post.post.content,
+                        media: post.post.media,
+                        createdAt: new Date(post.post.createdAt),
+                    },
+                    user: {
+                        id: post.user.id,
+                        username: post.user.username,
+                        pfp: post.user.pfp,
+                        description: post.user.description,
+                    },
+                };
+            });
+            setPosts((prevPosts) => [...prevPosts, ...newPosts]);
+            setOffset((prevOffset) => prevOffset + limit);
+        } else {
+            getPostsStatus({
+                title: "Error fetching posts",
+                description: response.error,
+                status: "error",
+                isClosable: true,
+            });
         }
-        const newPosts: PostsGetResponse[] = data.map((post) => {
-            return {
-                post: {
-                    id: post.post.id,
-                    content: post.post.content,
-                    media: post.post.media,
-                    createdAt: new Date(post.post.CreatedAt),
-                },
-                user: {
-                    id: post.user.id,
-                    username: post.user.username,
-                    pfp: post.user.pfp,
-                    description: post.user.description,
-                },
-            };
-        });
-        setPosts((prevPosts) => [...prevPosts, ...newPosts]);
-        setOffset((prevOffset) => prevOffset + limit);
     };
 
     useEffect(() => {
@@ -63,12 +66,17 @@ const PostFeed = () => {
                     padding={2}
                     marginY={1}
                 >
-                    <Avatar src={post.user.pfp} marginRight={2} />
+                    <Avatar
+                        src={post.user.pfp}
+                        name={post.user.username}
+                        marginRight={2}
+                    />
 
                     <VStack alignItems={"start"} width={"100%"}>
                         <Text fontWeight={"bold"}>
-                            {post.user.username} •{" "}
-                            {post.post.createdAt.toLocaleDateString()}
+                            {`${
+                                post.user.username
+                            } • ${post.post.createdAt.toLocaleDateString()}`}
                         </Text>
                         <Text>{post.post.content}</Text>
                         <Image objectFit={"cover"} src={post.post.media} />

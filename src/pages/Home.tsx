@@ -12,11 +12,19 @@ import {
     MenuItem,
     useToast,
 } from "@chakra-ui/react";
-import { IconHome, IconLogout, IconUser } from "@tabler/icons-react";
-import { Outlet, useNavigate } from "react-router-dom";
-import CreatePost from "@/components/CreatePost";
+import {
+    IconEggFried,
+    IconHome,
+    IconLogin,
+    IconLogout,
+    IconUser,
+} from "@tabler/icons-react";
+import { Outlet, redirect, useNavigate } from "react-router-dom";
+import CreatePostModal from "@/components/CreatePost";
 import { User } from "@/internal/Models";
 import { useEffect, useState } from "react";
+import { Logout } from "@/internal/api/AuthApi";
+import { GetUserByAuth } from "@/internal/api/UsersApi";
 const Home = () => {
     const navigate = useNavigate();
 
@@ -28,54 +36,29 @@ const Home = () => {
 
     const logoutStatusToast = useToast();
     const onLogout = async () => {
-        try {
-            const response = await fetch(
-                "http://localhost:8000/api/v1/auth/logout",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            const data = await response.json();
-            if (response.ok) {
-                logoutStatusToast({
-                    title: "Logged out",
-                    status: "success",
-                    isClosable: true,
-                });
-            } else {
-                logoutStatusToast({
-                    title: "Error logging out",
-                    description: data.message,
-                    status: "error",
-                    isClosable: true,
-                });
-            }
-        } catch (error: any) {
+        const response = await Logout();
+        if (response.success) {
+            logoutStatusToast({
+                title: "Logged out",
+                status: "success",
+                isClosable: true,
+            });
+        } else {
             logoutStatusToast({
                 title: "Error logging out",
-                description: error.message,
+                description: response.error,
                 status: "error",
                 isClosable: true,
             });
-        } finally {
-            navigate("/fritata-frontend/auth");
         }
+        navigate("/fritata-frontend/auth");
     };
 
     const [user, setUser] = useState<User>();
     const getUserByAuth = async () => {
-        const response = await fetch("http://localhost:8010/api/v1/users/", {
-            method: "GET",
-            credentials: "include",
-        });
-        const data: User = await response.json();
-        if (response.ok) {
-            setUser(data);
-        } else {
-            setUser(undefined);
+        const response = await GetUserByAuth();
+        if (response.success) {
+            setUser(response.data);
         }
     };
     useEffect(() => {
@@ -91,11 +74,7 @@ const Home = () => {
                 height={"100vh"}
                 padding={5}
             >
-                <Image
-                    boxSize={"100px"}
-                    src={"egg-fried.svg"}
-                    marginBottom={5}
-                />
+                <Icon as={IconEggFried} boxSize={"100px"} marginBottom={5} />
 
                 <Button
                     width={"100%"}
@@ -107,44 +86,64 @@ const Home = () => {
                 >
                     Home
                 </Button>
-                <Button
-                    width={"100%"}
-                    leftIcon={<Icon as={IconUser} />}
-                    variant={"outline"}
-                    marginBottom={2}
-                    colorScheme="red"
-                    onClick={() => navigate("/fritata-frontend/profile")}
-                >
-                    Profile
-                </Button>
-                <Button
-                    width={"100%"}
-                    colorScheme="red"
-                    onClick={onCreatePostOpen}
-                >
-                    Post
-                </Button>
+                {user && (
+                    <>
+                        <Button
+                            width={"100%"}
+                            leftIcon={<Icon as={IconUser} />}
+                            variant={"outline"}
+                            marginBottom={2}
+                            colorScheme="red"
+                            onClick={() =>
+                                navigate("/fritata-frontend/profile")
+                            }
+                        >
+                            Profile
+                        </Button>
+                        <Button
+                            width={"100%"}
+                            colorScheme="red"
+                            onClick={onCreatePostOpen}
+                        >
+                            Post
+                        </Button>
+                    </>
+                )}
+
                 <Spacer />
-                <Menu placement="top">
-                    <MenuButton
-                        as={Button}
+                {user ? (
+                    <Menu placement="top">
+                        <MenuButton
+                            as={Button}
+                            variant="outline"
+                            colorScheme="red"
+                            paddingY={6}
+                            leftIcon={<Avatar size="sm" src={user?.pfp} />}
+                            width="100%"
+                        >
+                            {user?.username}
+                        </MenuButton>
+                        <MenuList>
+                            <MenuItem
+                                icon={<Icon as={IconLogout} />}
+                                onClick={onLogout}
+                            >
+                                Logout
+                            </MenuItem>
+                        </MenuList>
+                    </Menu>
+                ) : (
+                    <Button
                         variant="outline"
                         colorScheme="red"
                         paddingY={6}
-                        leftIcon={<Avatar size="sm" src={user?.pfp} />}
+                        leftIcon={<Icon as={IconLogin} />}
                         width="100%"
+                        onClick={() => navigate("/fritata-frontend/auth")}
                     >
-                        {user?.username}
-                    </MenuButton>
-                    <MenuList>
-                        <MenuItem
-                            icon={<Icon as={IconLogout} />}
-                            onClick={onLogout}
-                        >
-                            Logout
-                        </MenuItem>
-                    </MenuList>
-                </Menu>
+                        Login / register
+                    </Button>
+                )}
             </Flex>
             <Flex
                 direction={"column"}
@@ -155,7 +154,10 @@ const Home = () => {
             >
                 <Outlet />
             </Flex>
-            <CreatePost isOpen={isCreatePostOpen} onClose={onCreatePostClose} />
+            <CreatePostModal
+                isOpen={isCreatePostOpen}
+                onClose={onCreatePostClose}
+            />
         </Flex>
     );
 };

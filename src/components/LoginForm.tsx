@@ -1,3 +1,4 @@
+import { Login } from "@/internal/api/AuthApi";
 import {
     Button,
     Center,
@@ -18,43 +19,18 @@ const LoginForm = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleSumbit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleSumbit = async () => {
         setLoading(true);
-        try {
-            const response = await fetch(
-                "http://localhost:8000/api/v1/auth/login",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        email,
-                        password,
-                    }),
-                    credentials: "include",
-                }
-            );
-            const data = await response.json();
-            if (response.ok) {
-                onLoginSuccess();
-            } else {
-                loginStatusToast({
-                    title: "Error logging in",
-                    description: data.message,
-                    status: "error",
-                    isClosable: true,
-                });
-            }
-        } catch (error: any) {
+        const response = await Login(email, password);
+        if (response.success) {
+            onLoginSuccess;
+        } else {
             loginStatusToast({
                 title: "Error logging in",
-                description: error.message,
+                description: response.error,
                 status: "error",
                 isClosable: true,
             });
-        } finally {
             setLoading(false);
         }
     };
@@ -74,7 +50,12 @@ const LoginForm = () => {
                 Login
             </Heading>
 
-            <form onSubmit={handleSumbit}>
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSumbit();
+                }}
+            >
                 <FormControl isRequired mt={2}>
                     <FormLabel>Email</FormLabel>
                     <Input

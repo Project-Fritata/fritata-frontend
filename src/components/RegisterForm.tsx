@@ -1,3 +1,4 @@
+import { Login, Register } from "@/internal/api/AuthApi";
 import {
     Button,
     Center,
@@ -7,7 +8,7 @@ import {
     Input,
     useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
@@ -19,46 +20,21 @@ const RegisterForm = () => {
     const [loadingText, setLoadingText] = useState("Registering...");
     const navigate = useNavigate();
 
-    const handleSumbit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleSubmit = async () => {
         setLoading(true);
-        try {
-            const response = await fetch(
-                "http://localhost:8000/api/v1/auth/register",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        email,
-                        password,
-                    }),
-                }
-            );
-            const data = await response.json();
-            if (response.ok) {
-                await onRegisterSuccess();
-            } else {
-                registerStatusToast({
-                    title: "Error registering",
-                    description: data.message,
-                    status: "error",
-                    isClosable: true,
-                });
-            }
-        } catch (error: any) {
+        const response = await Register(email, password);
+        if (response.success) {
+            await onRegisterSuccess();
+        } else {
             registerStatusToast({
                 title: "Error registering",
-                description: error.message,
+                description: response.error,
                 status: "error",
                 isClosable: true,
             });
-        } finally {
-            setLoading(false);
         }
+        setLoading(false);
     };
-
     const onRegisterSuccess = async () => {
         registerStatusToast({
             title: "Account created",
@@ -68,42 +44,18 @@ const RegisterForm = () => {
         });
         setLoadingText("Logging in...");
 
-        try {
-            const response = await fetch(
-                "http://localhost:8000/api/v1/auth/login",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        email,
-                        password,
-                    }),
-                    credentials: "include",
-                }
-            );
-            const data = await response.json();
-            if (response.ok) {
-                onLoginSuccess();
-            } else {
-                registerStatusToast({
-                    title: "Error logging in",
-                    description: data.message,
-                    status: "error",
-                    isClosable: true,
-                });
-            }
-        } catch (error: any) {
+        const response = await Login(email, password);
+        if (response.success) {
+            onLoginSuccess();
+        } else {
             registerStatusToast({
                 title: "Error logging in",
-                description: error.message,
+                description: response.error,
                 status: "error",
                 isClosable: true,
             });
         }
     };
-
     const onLoginSuccess = () => {
         registerStatusToast({
             title: "Login successful",
@@ -119,7 +71,12 @@ const RegisterForm = () => {
                 Register
             </Heading>
 
-            <form onSubmit={handleSumbit}>
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit();
+                }}
+            >
                 <FormControl isRequired mt={2}>
                     <FormLabel>Email</FormLabel>
                     <Input

@@ -11,3 +11,12 @@ export interface User {
     pfp: string;
     description: string;
 }
+
+export interface PostsGetResponse {
+    post: Post;
+    user: User;
+}
+export interface PostsPostRequest {
+    content: string;
+    media: string;
+}

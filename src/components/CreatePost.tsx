@@ -1,4 +1,5 @@
-import { PostsPostRequest } from "@/internal/ReqRes";
+import { CreatePost } from "@/internal/api/PostsApi";
+import { PostsPostRequest } from "@/internal/Models";
 import {
     Button,
     Modal,
@@ -13,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 
-const CreatePost = ({
+const CreatePostModal = ({
     isOpen,
     onClose,
 }: {
@@ -29,40 +30,22 @@ const CreatePost = ({
             content,
             media: "",
         };
-        try {
-            const response = await fetch("http://localhost:8020/api/v1/posts", {
-                method: "Post",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(post),
-                credentials: "include",
+        const response = await CreatePost(post.content, post.media);
+        if (response.success) {
+            postStatusToast({
+                title: "Post created",
+                status: "success",
+                isClosable: true,
             });
-            const data = await response.json();
-            if (response.ok) {
-                postStatusToast({
-                    title: "Post created",
-                    status: "success",
-                    isClosable: true,
-                });
-            } else {
-                postStatusToast({
-                    title: "Error creating post",
-                    description: data.message,
-                    status: "error",
-                    isClosable: true,
-                });
-            }
-        } catch (error: any) {
+        } else {
             postStatusToast({
                 title: "Error creating post",
-                description: error.message,
+                description: response.error,
                 status: "error",
                 isClosable: true,
             });
-        } finally {
-            onClose();
         }
+        onClose();
     };
 
     return (
@@ -86,4 +69,4 @@ const CreatePost = ({
     );
 };
 
-export default CreatePost;
+export default CreatePostModal;
