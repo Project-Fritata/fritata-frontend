@@ -11,6 +11,8 @@ import {
     VStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { Link as ReactRouterLink } from "react-router-dom";
+import { Link as ChakraLink } from "@chakra-ui/react";
 
 const PostFeed = () => {
     const [offset, setOffset] = useState(0);
@@ -74,9 +76,13 @@ const PostFeed = () => {
 
                     <VStack alignItems={"start"} width={"100%"}>
                         <Text fontWeight={"bold"}>
-                            {`${
-                                post.user.username
-                            } • ${post.post.createdAt.toLocaleDateString()}`}
+                            <ChakraLink
+                                as={ReactRouterLink}
+                                to={`/fritata-frontend/profile/${post.user.username}`}
+                            >
+                                {post.user.username}
+                            </ChakraLink>
+                            {` • ${post.post.createdAt.toLocaleDateString()}`}
                         </Text>
                         <Text>{post.post.content}</Text>
                         <Image objectFit={"cover"} src={post.post.media} />

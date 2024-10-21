@@ -17,9 +17,11 @@ import { useState } from "react";
 const CreatePostModal = ({
     isOpen,
     onClose,
+    onPostSuccess,
 }: {
     isOpen: boolean;
     onClose: () => void;
+    onPostSuccess: () => void;
 }) => {
     const [content, setContent] = useState("");
 
@@ -37,6 +39,7 @@ const CreatePostModal = ({
                 status: "success",
                 isClosable: true,
             });
+            onPostSuccess();
         } else {
             postStatusToast({
                 title: "Error creating post",

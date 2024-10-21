@@ -1,6 +1,5 @@
 import {
     Avatar,
-    Image,
     Button,
     Icon,
     Spacer,
@@ -19,8 +18,8 @@ import {
     IconLogout,
     IconUser,
 } from "@tabler/icons-react";
-import { Outlet, redirect, useNavigate } from "react-router-dom";
-import CreatePostModal from "@/components/CreatePost";
+import { Outlet, useNavigate } from "react-router-dom";
+import CreatePostModal from "@/components/CreatePostModal";
 import { User } from "@/internal/Models";
 import { useEffect, useState } from "react";
 import { Logout } from "@/internal/api/AuthApi";
@@ -64,6 +63,8 @@ const Home = () => {
     useEffect(() => {
         getUserByAuth();
     }, []);
+
+    const [trigger, setTrigger] = useState(0);
 
     return (
         <Flex direction={"row"} width={"100%"}>
@@ -152,11 +153,14 @@ const Home = () => {
                 height={"100vh"}
                 padding={5}
             >
-                <Outlet />
+                <Outlet key={trigger} />
             </Flex>
             <CreatePostModal
                 isOpen={isCreatePostOpen}
                 onClose={onCreatePostClose}
+                onPostSuccess={() => {
+                    setTrigger((prevTrigger) => prevTrigger + 1);
+                }}
             />
         </Flex>
     );
