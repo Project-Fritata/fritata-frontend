@@ -8,7 +8,7 @@ import {
     Input,
     useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
@@ -23,7 +23,7 @@ const LoginForm = () => {
         setLoading(true);
         const response = await Login(email, password);
         if (response.success) {
-            onLoginSuccess;
+            onLoginSuccess();
         } else {
             loginStatusToast({
                 title: "Error logging in",
