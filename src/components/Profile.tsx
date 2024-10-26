@@ -13,6 +13,7 @@ import {
     Spacer,
     useDisclosure,
     useToast,
+    useBreakpointValue,
 } from "@chakra-ui/react";
 import { IconEdit } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
@@ -26,6 +27,8 @@ import {
 
 const Profile = () => {
     const usernameParam = useParams().username;
+
+    const isMobile = useBreakpointValue({ base: true, md: false });
 
     const [fetchingData, setFetchingData] = useState(true);
 
@@ -124,39 +127,79 @@ const Profile = () => {
                         width={"100%"}
                     >
                         <VStack alignItems={"center"} width={"100%"}>
-                            <HStack>
-                                <Avatar
-                                    borderWidth={0.5}
-                                    size={"2xl"}
-                                    borderColor={"black"}
-                                    src={user.pfp}
-                                    name={user.username}
-                                    marginRight={usernameParam ? 10 : 0}
-                                />
-                                {!usernameParam && (
-                                    <IconButton
-                                        icon={<Icon as={IconEdit} />}
-                                        aria-label={"Edit"}
-                                        variant={"ghost"}
-                                        marginRight={10}
-                                        onClick={() => {
-                                            onEditPfpOpen();
-                                        }}
+                            {isMobile ? (
+                                <VStack alignItems={"center"} width={"100%"}>
+                                    <HStack>
+                                        <Avatar
+                                            borderWidth={0.5}
+                                            size={isMobile ? "xl" : "2xl"}
+                                            borderColor={"black"}
+                                            src={user.pfp}
+                                            name={user.username}
+                                        />
+                                        {!usernameParam && (
+                                            <IconButton
+                                                icon={<Icon as={IconEdit} />}
+                                                aria-label={"Edit"}
+                                                variant={"ghost"}
+                                                onClick={() => {
+                                                    onEditPfpOpen();
+                                                }}
+                                            />
+                                        )}
+                                    </HStack>
+                                    <HStack>
+                                        <Heading>{user.username}</Heading>
+                                        {!usernameParam && (
+                                            <IconButton
+                                                icon={<Icon as={IconEdit} />}
+                                                aria-label={"Edit"}
+                                                variant={"ghost"}
+                                                onClick={() => {
+                                                    onEditUsernameOpen();
+                                                }}
+                                            />
+                                        )}
+                                    </HStack>
+                                </VStack>
+                            ) : (
+                                <HStack>
+                                    <Avatar
+                                        borderWidth={0.5}
+                                        size={isMobile ? "xl" : "2xl"}
+                                        borderColor={"black"}
+                                        src={user.pfp}
+                                        name={user.username}
+                                        marginRight={
+                                            usernameParam ? 10 : undefined
+                                        }
                                     />
-                                )}
+                                    {!usernameParam && (
+                                        <IconButton
+                                            icon={<Icon as={IconEdit} />}
+                                            aria-label={"Edit"}
+                                            variant={"ghost"}
+                                            marginRight={10}
+                                            onClick={() => {
+                                                onEditPfpOpen();
+                                            }}
+                                        />
+                                    )}
 
-                                <Heading>{user.username}</Heading>
-                                {!usernameParam && (
-                                    <IconButton
-                                        icon={<Icon as={IconEdit} />}
-                                        aria-label={"Edit"}
-                                        variant={"ghost"}
-                                        onClick={() => {
-                                            onEditUsernameOpen();
-                                        }}
-                                    />
-                                )}
-                            </HStack>
+                                    <Heading>{user.username}</Heading>
+                                    {!usernameParam && (
+                                        <IconButton
+                                            icon={<Icon as={IconEdit} />}
+                                            aria-label={"Edit"}
+                                            variant={"ghost"}
+                                            onClick={() => {
+                                                onEditUsernameOpen();
+                                            }}
+                                        />
+                                    )}
+                                </HStack>
+                            )}
+
                             <Card width={"100%"}>
                                 <CardBody>
                                     <Flex direction={"row"}>

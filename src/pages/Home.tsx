@@ -1,31 +1,19 @@
 import {
-    Avatar,
-    Button,
-    Icon,
-    Spacer,
     Flex,
     useDisclosure,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
     useToast,
+    useBreakpointValue,
 } from "@chakra-ui/react";
-import {
-    IconEggFried,
-    IconHome,
-    IconLogin,
-    IconLogout,
-    IconUser,
-} from "@tabler/icons-react";
 import { Outlet, useNavigate } from "react-router-dom";
 import CreatePostModal from "@/components/CreatePostModal";
 import { User } from "@/internal/Models";
 import { useEffect, useState } from "react";
 import { Logout } from "@/internal/api/AuthApi";
 import { GetUserByAuth } from "@/internal/api/UsersApi";
+import NavContent from "@/components/NavContent";
 const Home = () => {
     const navigate = useNavigate();
+    const isMobile = useBreakpointValue({ base: true, md: false });
 
     const {
         isOpen: isCreatePostOpen,
@@ -67,91 +55,41 @@ const Home = () => {
     const [trigger, setTrigger] = useState(0);
 
     return (
-        <Flex direction={"row"} width={"100%"}>
+        <Flex direction={isMobile ? "column" : "row"} width={"100%"}>
             <Flex
-                direction={"column"}
+                direction={isMobile ? "row" : "column"}
                 alignItems={"center"}
-                width={"20%"}
-                height={"100vh"}
-                padding={5}
+                justifyContent={"space-around"}
+                width={isMobile ? "100%" : "20%"}
+                height={isMobile ? "70px" : "100vh"}
+                padding={2}
+                position={"fixed"}
+                top={isMobile ? undefined : 0}
+                bottom={isMobile ? 0 : undefined}
+                left={isMobile ? undefined : 0}
+                zIndex={1}
+                borderTop={isMobile ? "1px solid black" : undefined}
+                roundedTop={isMobile ? 10 : undefined}
+                backgroundColor={"white"}
             >
-                <Icon as={IconEggFried} boxSize={"100px"} marginBottom={5} />
-
-                <Button
-                    width={"100%"}
-                    leftIcon={<Icon as={IconHome} />}
-                    variant={"outline"}
-                    marginBottom={2}
-                    colorScheme="red"
-                    onClick={() => navigate("/fritata-frontend/")}
-                >
-                    Home
-                </Button>
-                {user && (
-                    <>
-                        <Button
-                            width={"100%"}
-                            leftIcon={<Icon as={IconUser} />}
-                            variant={"outline"}
-                            marginBottom={2}
-                            colorScheme="red"
-                            onClick={() =>
-                                navigate("/fritata-frontend/profile")
-                            }
-                        >
-                            Profile
-                        </Button>
-                        <Button
-                            width={"100%"}
-                            colorScheme="red"
-                            onClick={onCreatePostOpen}
-                        >
-                            Post
-                        </Button>
-                    </>
-                )}
-
-                <Spacer />
-                {user ? (
-                    <Menu placement="top">
-                        <MenuButton
-                            as={Button}
-                            variant="outline"
-                            colorScheme="red"
-                            paddingY={6}
-                            leftIcon={<Avatar size="sm" src={user?.pfp} />}
-                            width="100%"
-                        >
-                            {user?.username}
-                        </MenuButton>
-                        <MenuList>
-                            <MenuItem
-                                icon={<Icon as={IconLogout} />}
-                                onClick={onLogout}
-                            >
-                                Logout
-                            </MenuItem>
-                        </MenuList>
-                    </Menu>
-                ) : (
-                    <Button
-                        variant="outline"
-                        colorScheme="red"
-                        paddingY={6}
-                        leftIcon={<Icon as={IconLogin} />}
-                        width="100%"
-                        onClick={() => navigate("/fritata-frontend/auth")}
-                    >
-                        Login / register
-                    </Button>
-                )}
+                <NavContent
+                    isMobile={isMobile}
+                    user={user}
+                    navigate={navigate}
+                    onCreatePostOpen={onCreatePostOpen}
+                    onLogout={onLogout}
+                />
             </Flex>
             <Flex
+                flexGrow={1}
                 direction={"column"}
                 alignItems={"center"}
-                width={"60%"}
-                height={"100vh"}
+                width={isMobile ? "100%" : "60%"}
+                height={isMobile ? "calc(100% - 70px)" : "100%"}
                 padding={5}
+                paddingLeft={isMobile ? undefined : 0}
+                marginLeft={isMobile ? undefined : "20%"}
+                marginBottom={isMobile ? "70px" : undefined}
             >
                 <Outlet key={trigger} />
             </Flex>
