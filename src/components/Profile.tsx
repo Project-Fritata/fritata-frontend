@@ -63,7 +63,7 @@ const Profile = () => {
         } else {
             getUserByAuth();
         }
-    }, []);
+    }, [usernameParam]);
 
     const editStatusToast = useToast();
     const {
