@@ -18,9 +18,13 @@ const PostFeed = () => {
     const [offset, setOffset] = useState(0);
     const limit = 10;
     const [posts, setPosts] = useState<PostsGetResponse[]>([]);
+    const [isFetching, setIsFetching] = useState(false);
+    const [noPostsLeft, setNoPostsLeft] = useState(false);
 
     const getPostsStatus = useToast();
     const getPosts = async () => {
+        if (isFetching || noPostsLeft) return;
+        setIsFetching(true);
         const response = await GetPosts(offset, limit);
         if (response.success && response.data) {
             const newPosts: PostsGetResponse[] = response.data.map((post) => {
@@ -39,8 +43,11 @@ const PostFeed = () => {
                     },
                 };
             });
-            setPosts((prevPosts) => [...prevPosts, ...newPosts]);
             setOffset((prevOffset) => prevOffset + limit);
+            setPosts((prevPosts) => [...prevPosts, ...newPosts]);
+            if (newPosts.length < limit) {
+                setNoPostsLeft(true);
+            }
         } else {
             getPostsStatus({
                 title: "Error fetching posts",
@@ -49,13 +56,28 @@ const PostFeed = () => {
                 isClosable: true,
             });
         }
+        setIsFetching(false);
     };
 
     useEffect(() => {
-        if (posts.length === 0 || posts.length < offset) {
+        if (posts.length === 0) {
             getPosts();
         }
-    }, []);
+
+        const handleScroll = () => {
+            const scrollTop = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const fullHeight = document.documentElement.scrollHeight;
+
+            if (scrollTop + windowHeight >= fullHeight) {
+                getPosts();
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [offset]);
 
     return (
         <Flex direction={"column"} alignItems={"center"} width={"100%"}>
