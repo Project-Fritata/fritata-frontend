@@ -6,6 +6,7 @@ import {
     Flex,
     Heading,
     Image,
+    Link,
     Text,
     useToast,
     VStack,
@@ -111,6 +112,18 @@ const PostFeed = () => {
                     </VStack>
                 </Card>
             ))}
+            {noPostsLeft && (
+                <Link
+                    href="https://www.youtube.com/shorts/2GGA4NlMjKc"
+                    isExternal
+                    fontSize={"xl"}
+                    color={"teal"}
+                    textDecor={"underline"}
+                    marginTop={5}
+                >
+                    No more posts, watch this for fun :D
+                </Link>
+            )}
         </Flex>
     );
 };
