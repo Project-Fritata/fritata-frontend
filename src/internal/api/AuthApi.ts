@@ -3,7 +3,7 @@ interface ApiResponse {
     error?: string;
 }
 
-const URL_API_CLIENT = "http://localhost:8000/api/v1/auth";
+const URL_API_CLIENT = "http://50.17.141.235:8000/api/v1/auth";
 
 export const Register = async (
     email: string,

@@ -6,7 +6,7 @@ interface ApiResponse<T> {
     error?: string;
 }
 
-const URL_API = "http://localhost:8010/api/v1/users";
+const URL_API = "http://50.17.141.235:8010/api/v1/users";
 
 export const GetUserByUsername = async (
     username: string

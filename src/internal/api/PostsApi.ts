@@ -6,7 +6,7 @@ interface ApiResponse<T> {
     error?: string;
 }
 
-const URL_API = "http://localhost:8020/api/v1/posts";
+const URL_API = "http://50.17.141.235:8020/api/v1/posts";
 
 export const GetPosts = async (
     offset: number,
