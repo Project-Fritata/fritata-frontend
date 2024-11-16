@@ -1,30 +1,26 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 
-import App from "./App";
 import ErrorPage from "./ErrorPage";
 import Home from "./pages/Home";
-
-const router = createBrowserRouter([
-    {
-        path: "/fritata-frontend",
-        element: <App />,
-        errorElement: <ErrorPage />,
-        children: [
-            {
-                path: "",
-                element: <Home />,
-            },
-        ],
-    },
-]);
+import Auth from "./pages/Auth";
+import PostFeed from "./components/PostFeed";
+import Profile from "./components/Profile";
 
 createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        <ChakraProvider>
-            <RouterProvider router={router} />
-        </ChakraProvider>
-    </StrictMode>
+    <ChakraProvider>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/fritata-frontend" element={<Home />}>
+                    <Route index element={<PostFeed />} />
+                    <Route path="profile" element={<Profile />}>
+                        <Route path=":username" element={<Profile />} />
+                    </Route>
+                </Route>
+                <Route path="/fritata-frontend/auth" element={<Auth />} />
+                <Route path="*" element={<ErrorPage />} />
+            </Routes>
+        </BrowserRouter>
+    </ChakraProvider>
 );
