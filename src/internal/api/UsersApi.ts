@@ -6,7 +6,7 @@ interface ApiResponse<T> {
     error?: string;
 }
 
-const URL_API = "http://50.17.141.235:8010/api/v1/users";
+const URL_API = "https://50.17.141.235.nip.io/api/v1/users";
 
 export const GetUserByUsername = async (
     username: string
@@ -36,7 +36,7 @@ export const GetUserByAuth = async (): Promise<ApiResponse<User>> => {
 };
 
 export const UpdateUser = async (user: User): Promise<ApiResponse<User>> => {
-    const response = await fetch("http://localhost:8010/api/v1/users/", {
+    const response = await fetch(URL_API, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
