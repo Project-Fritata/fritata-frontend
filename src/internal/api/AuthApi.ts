@@ -56,6 +56,7 @@ export const Logout = async (): Promise<ApiResponse> => {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: "include",
     });
     if (response.ok) {
         return { success: true };
