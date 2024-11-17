@@ -18,7 +18,7 @@ import {
     IconPlus,
     IconUser,
 } from "@tabler/icons-react";
-import { NavigateFunction } from "react-router-dom";
+import { NavigateFunction, useLocation } from "react-router-dom";
 
 const NavContent = ({
     isMobile,
@@ -33,24 +33,28 @@ const NavContent = ({
     onCreatePostOpen: () => void;
     onLogout: () => void;
 }) => {
+    const location = useLocation();
+    
     return (
         <>
             {isMobile ? (
                 <>
                     <Icon as={IconEggFried} boxSize={8} marginX={5} />
-                    <IconButton
-                        icon={<Icon boxSize={8} as={IconHome} />}
-                        aria-label={"Home"}
-                        variant={"ghost"}
-                        padding={5}
-                        colorScheme="red"
-                        onClick={() => navigate("/fritata-frontend/")}
-                    />
+                    {user !== undefined && (
+                        <IconButton
+                            icon={<Icon boxSize={8} as={IconHome} />}
+                            aria-label={"Home"}
+                            variant={location.pathname === "/fritata-frontend/" ? "outline" : "ghost"}
+                            padding={5}
+                            colorScheme="red"
+                            onClick={() => navigate("/fritata-frontend/")}
+                        />
+                    )}
                     {user !== undefined && (
                         <IconButton
                             icon={<Icon boxSize={8} as={IconUser} />}
                             aria-label={"Profile"}
-                            variant={"ghost"}
+                            variant={location.pathname === "/fritata-frontend/profile" ? "outline" : "ghost"}
                             padding={5}
                             colorScheme="red"
                             onClick={() =>
@@ -58,7 +62,7 @@ const NavContent = ({
                             }
                         />
                     )}
-                    {user !== undefined && (
+                    {user == undefined && (
                         <IconButton
                             icon={<Icon boxSize={8} as={IconLogin} />}
                             aria-label={"Login / register"}
@@ -68,14 +72,15 @@ const NavContent = ({
                             onClick={() => navigate("/fritata-frontend/auth")}
                         />
                     )}
-
-                    <IconButton
-                        icon={<Icon boxSize={6} as={IconPlus} />}
-                        aria-label={"Post"}
-                        padding={5}
-                        colorScheme="red"
-                        onClick={onCreatePostOpen}
-                    />
+                    {user !== undefined && (
+                        <IconButton
+                            icon={<Icon boxSize={6} as={IconPlus} />}
+                            aria-label={"Post"}
+                            padding={5}
+                            colorScheme="red"
+                            onClick={onCreatePostOpen}
+                        />
+                    )}
                 </>
             ) : (
                 <>
@@ -84,7 +89,7 @@ const NavContent = ({
                     <Button
                         width={"100%"}
                         leftIcon={<Icon as={IconHome} />}
-                        variant={"outline"}
+                        variant={location.pathname === "/fritata-frontend/" ? "outline" : "ghost"}
                         marginBottom={2}
                         colorScheme="red"
                         onClick={() => navigate("/fritata-frontend/")}
@@ -96,7 +101,7 @@ const NavContent = ({
                             <Button
                                 width={"100%"}
                                 leftIcon={<Icon as={IconUser} />}
-                                variant={"outline"}
+                                variant={location.pathname === "/fritata-frontend/profile" ? "outline" : "ghost"}
                                 marginBottom={2}
                                 colorScheme="red"
                                 onClick={() =>
