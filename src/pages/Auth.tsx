@@ -3,13 +3,11 @@ import RegisterForm from "@/components/RegisterForm";
 import {
     Box,
     Center,
-    Spacer,
     Tab,
     TabList,
     TabPanel,
     TabPanels,
     Tabs,
-    Text,
 } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
