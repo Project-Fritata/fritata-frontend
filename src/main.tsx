@@ -15,7 +15,7 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="*" element={<NotFoundPage />} />
                 <Route path="/fritata-frontend" element={<Home />}>
                     <Route index element={<PostFeed />} />
-                    <Route path="profile">
+                    <Route path="profile" element={<Profile />}>
                         <Route path=":username" element={<Profile />} />
                     </Route>
                 </Route>
