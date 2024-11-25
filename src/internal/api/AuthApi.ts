@@ -3,7 +3,7 @@ interface ApiResponse {
     error?: string;
 }
 
-const URL_API_CLIENT = "https://50.17.141.235.nip.io/api/v1/auth";
+const URL_API_CLIENT = "https://20.52.101.8.nip.io/api/v1/auth";
 
 export const Register = async (
     email: string,
