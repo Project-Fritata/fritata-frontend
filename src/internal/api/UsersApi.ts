@@ -6,7 +6,7 @@ interface ApiResponse<T> {
     error?: string;
 }
 
-const URL_API = "https://50.17.141.235.nip.io/api/v1/users";
+const URL_API = "https://20.52.101.8.nip.io/api/v1/users";
 
 export const GetUserByUsername = async (
     username: string
