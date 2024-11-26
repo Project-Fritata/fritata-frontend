@@ -1,4 +1,5 @@
 import { Login, Register } from "@/internal/api/AuthApi";
+import { EmailUsernameCheck } from "@/internal/EmailUsernameCheck";
 import {
     Button,
     Center,
@@ -19,6 +20,13 @@ const RegisterForm = () => {
     const [loading, setLoading] = useState(false);
     const [loadingText, setLoadingText] = useState("Registering...");
     const navigate = useNavigate();
+
+    const handleEmailChange = (e: any) => {
+        const value = e.target.value;
+        if (EmailUsernameCheck(value)) {
+            setEmail(value);
+        }
+    };
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -82,7 +90,8 @@ const RegisterForm = () => {
                     <Input
                         mt={-2}
                         type={"email"}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={email}
+                        onChange={handleEmailChange}
                     />
                 </FormControl>
                 <FormControl mt={2} isRequired>
