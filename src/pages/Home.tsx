@@ -38,7 +38,7 @@ const Home = () => {
                 isClosable: true,
             });
         }
-        navigate("/fritata-frontend/auth");
+        navigate("/auth");
     };
 
     const [user, setUser] = useState<User>();

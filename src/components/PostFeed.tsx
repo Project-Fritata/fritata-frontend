@@ -101,7 +101,7 @@ const PostFeed = () => {
                         <Text fontWeight={"bold"}>
                             <ChakraLink
                                 as={ReactRouterLink}
-                                to={`/fritata-frontend/profile/${post.user.username}`}
+                                to={`/profile/${post.user.username}`}
                             >
                                 {post.user.username}
                             </ChakraLink>
