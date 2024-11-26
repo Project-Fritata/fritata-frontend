@@ -8,7 +8,7 @@ const NotFoundPage = () => {
             <Heading>Not Found: This page does not exist</Heading>
             <ChakraLink
                 as={ReactRouterLink}
-                to={`/fritata-frontend/`}
+                to={`/`}
             >
                 Go back to homepage
             </ChakraLink>

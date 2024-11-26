@@ -44,21 +44,21 @@ const NavContent = ({
                         <IconButton
                             icon={<Icon boxSize={8} as={IconHome} />}
                             aria-label={"Home"}
-                            variant={location.pathname === "/fritata-frontend/" ? "outline" : "ghost"}
+                            variant={location.pathname === "/" ? "outline" : "ghost"}
                             padding={5}
                             colorScheme="red"
-                            onClick={() => navigate("/fritata-frontend/")}
+                            onClick={() => navigate("/")}
                         />
                     )}
                     {user !== undefined && (
                         <IconButton
                             icon={<Icon boxSize={8} as={IconUser} />}
                             aria-label={"Profile"}
-                            variant={location.pathname === "/fritata-frontend/profile" ? "outline" : "ghost"}
+                            variant={location.pathname === "/profile" ? "outline" : "ghost"}
                             padding={5}
                             colorScheme="red"
                             onClick={() =>
-                                navigate("/fritata-frontend/profile")
+                                navigate("/profile")
                             }
                         />
                     )}
@@ -69,7 +69,7 @@ const NavContent = ({
                             variant={"ghost"}
                             padding={5}
                             colorScheme="red"
-                            onClick={() => navigate("/fritata-frontend/auth")}
+                            onClick={() => navigate("/auth")}
                         />
                     )}
                     {user !== undefined && (
@@ -89,10 +89,10 @@ const NavContent = ({
                     <Button
                         width={"100%"}
                         leftIcon={<Icon as={IconHome} />}
-                        variant={location.pathname === "/fritata-frontend/" ? "outline" : "ghost"}
+                        variant={location.pathname === "/" ? "outline" : "ghost"}
                         marginBottom={2}
                         colorScheme="red"
-                        onClick={() => navigate("/fritata-frontend/")}
+                        onClick={() => navigate("/")}
                     >
                         Home
                     </Button>
@@ -101,11 +101,11 @@ const NavContent = ({
                             <Button
                                 width={"100%"}
                                 leftIcon={<Icon as={IconUser} />}
-                                variant={location.pathname === "/fritata-frontend/profile" ? "outline" : "ghost"}
+                                variant={location.pathname === "/profile" ? "outline" : "ghost"}
                                 marginBottom={2}
                                 colorScheme="red"
                                 onClick={() =>
-                                    navigate("/fritata-frontend/profile")
+                                    navigate("/profile")
                                 }
                             >
                                 Profile
@@ -149,7 +149,7 @@ const NavContent = ({
                             paddingY={6}
                             leftIcon={<Icon as={IconLogin} />}
                             width="100%"
-                            onClick={() => navigate("/fritata-frontend/auth")}
+                            onClick={() => navigate("/auth")}
                         >
                             Login / register
                         </Button>

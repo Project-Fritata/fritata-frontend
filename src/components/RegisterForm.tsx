@@ -62,7 +62,7 @@ const RegisterForm = () => {
             status: "success",
             isClosable: true,
         });
-        navigate("/fritata-frontend/");
+        navigate("/");
     };
 
     return (

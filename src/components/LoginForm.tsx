@@ -41,7 +41,7 @@ const LoginForm = () => {
             status: "success",
             isClosable: true,
         });
-        navigate("/fritata-frontend/");
+        navigate("/");
     };
 
     return (

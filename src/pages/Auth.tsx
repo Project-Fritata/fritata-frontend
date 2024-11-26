@@ -39,7 +39,7 @@ const Auth = () => {
                 <Center>
                     <ChakraLink
                         as={ReactRouterLink}
-                        to={`/fritata-frontend/`}
+                        to={`/`}
                     >
                         Continue without account
                     </ChakraLink>
