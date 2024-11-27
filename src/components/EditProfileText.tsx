@@ -1,3 +1,4 @@
+import { UsernameCheckValidity } from "@/internal/EmailUsernameCheck";
 import {
     Button,
     Modal,
@@ -7,6 +8,7 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    Text,
     Textarea,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -18,6 +20,7 @@ const EditProfileText = ({
     heading,
     previousContent,
     placeholder,
+    isUsername,
 }: {
     isOpen: boolean;
     onClose: () => void;
@@ -25,6 +28,7 @@ const EditProfileText = ({
     heading: string;
     previousContent: string;
     placeholder: string;
+    isUsername?: boolean;
 }) => {
     const [content, setContent] = useState(previousContent);
 
@@ -38,8 +42,18 @@ const EditProfileText = ({
                     <Textarea
                         placeholder={placeholder}
                         value={content}
-                        onChange={(e) => setContent(e.target.value)}
+                        onChange={(e) => {
+                            if (isUsername && !UsernameCheckValidity(e.target.value)) {
+                                return
+                            }
+                            setContent(e.target.value);
+                        }}
                     />
+                    {isUsername && (
+                        <Text>
+                            Usernames can only contain english letters, numbers, and the following characters: @ - _ .
+                        </Text>
+                    )}
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={() => onSave(content)}>Save</Button>

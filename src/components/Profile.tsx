@@ -242,6 +242,7 @@ const Profile = () => {
                         previousContent={user.username}
                         heading={"Change username"}
                         placeholder={"New username"}
+                        isUsername={true}
                     />
                     <EditProfileText
                         isOpen={isEditDescriptionOpen}

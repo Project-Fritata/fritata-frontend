@@ -7,7 +7,8 @@ const URL_API_CLIENT = "https://20.52.101.8.nip.io/api/v1/auth";
 
 export const Register = async (
     email: string,
-    password: string
+    password: string,
+    username: string
 ): Promise<ApiResponse> => {
     const response = await fetch(`${URL_API_CLIENT}/register`, {
         method: "POST",
@@ -17,6 +18,7 @@ export const Register = async (
         body: JSON.stringify({
             email,
             password,
+            username,
         }),
     });
     if (response.ok) {

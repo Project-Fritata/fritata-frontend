@@ -1,4 +1,5 @@
 import { Login, Register } from "@/internal/api/AuthApi";
+import { UsernameCheckValidity } from "@/internal/EmailUsernameCheck";
 import {
     Button,
     Center,
@@ -14,15 +15,23 @@ import { useNavigate } from "react-router-dom";
 const RegisterForm = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
 
     const registerStatusToast = useToast();
     const [loading, setLoading] = useState(false);
     const [loadingText, setLoadingText] = useState("Registering...");
     const navigate = useNavigate();
 
+    const handleUsernameChange = (e: any) => {
+        const value = e.target.value;
+        if (UsernameCheckValidity(value)) {
+            setUsername(value);
+        }
+    };
+
     const handleSubmit = async () => {
         setLoading(true);
-        const response = await Register(email, password);
+        const response = await Register(email, password, username);
         if (response.success) {
             await onRegisterSuccess();
         } else {
@@ -82,7 +91,8 @@ const RegisterForm = () => {
                     <Input
                         mt={-2}
                         type={"email"}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={email}
+                        onChange={() => setEmail(email)}
                     />
                 </FormControl>
                 <FormControl mt={2} isRequired>
@@ -91,6 +101,15 @@ const RegisterForm = () => {
                         mt={-2}
                         type={"password"}
                         onChange={(e) => setPassword(e.target.value)}
+                    />
+                </FormControl>
+                <FormControl isRequired mt={2}>
+                    <FormLabel>Username</FormLabel>
+                    <Input
+                        mt={-2}
+                        type={"username"}
+                        value={username}
+                        onChange={handleUsernameChange}
                     />
                 </FormControl>
                 <Center mt={4}>
