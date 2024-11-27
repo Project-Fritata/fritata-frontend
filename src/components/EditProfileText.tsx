@@ -1,4 +1,4 @@
-import { EmailUsernameCheck } from "@/internal/EmailUsernameCheck";
+import { UsernameCheckValidity } from "@/internal/EmailUsernameCheck";
 import {
     Button,
     Modal,
@@ -43,7 +43,7 @@ const EditProfileText = ({
                         placeholder={placeholder}
                         value={content}
                         onChange={(e) => {
-                            if (isUsername && !EmailUsernameCheck(e.target.value)) {
+                            if (isUsername && !UsernameCheckValidity(e.target.value)) {
                                 return
                             }
                             setContent(e.target.value);
