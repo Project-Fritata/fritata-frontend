@@ -92,7 +92,7 @@ const RegisterForm = () => {
                         mt={-2}
                         type={"email"}
                         value={email}
-                        onChange={() => setEmail(email)}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </FormControl>
                 <FormControl mt={2} isRequired>
