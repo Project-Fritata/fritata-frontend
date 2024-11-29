@@ -11,7 +11,7 @@ import {
     Text,
     Textarea,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const EditProfileText = ({
     isOpen,
@@ -31,6 +31,9 @@ const EditProfileText = ({
     isUsername?: boolean;
 }) => {
     const [content, setContent] = useState(previousContent);
+    useEffect(() => {
+        setContent(previousContent);
+    }, [previousContent]);
 
     return (
         <Modal onClose={onClose} isOpen={isOpen} isCentered>
