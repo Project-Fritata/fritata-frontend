@@ -52,6 +52,15 @@ const NavContent = ({
                     )}
                     {user !== undefined && (
                         <IconButton
+                            icon={<Icon boxSize={6} as={IconPlus} />}
+                            aria-label={"Post"}
+                            padding={5}
+                            colorScheme="red"
+                            onClick={onCreatePostOpen}
+                        />
+                    )}
+                    {user !== undefined && (
+                        <IconButton
                             icon={<Icon boxSize={8} as={IconUser} />}
                             aria-label={"Profile"}
                             variant={location.pathname === "/profile" ? "outline" : "ghost"}
@@ -72,13 +81,14 @@ const NavContent = ({
                             onClick={() => navigate("/auth")}
                         />
                     )}
-                    {user !== undefined && (
+                    {user != undefined && (
                         <IconButton
-                            icon={<Icon boxSize={6} as={IconPlus} />}
-                            aria-label={"Post"}
+                            icon={<Icon boxSize={8} as={IconLogout} />}
+                            aria-label={"Logout"}
+                            variant={"ghost"}
                             padding={5}
                             colorScheme="red"
-                            onClick={onCreatePostOpen}
+                            onClick={onLogout}
                         />
                     )}
                 </>
